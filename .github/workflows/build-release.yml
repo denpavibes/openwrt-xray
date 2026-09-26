@@ -31,14 +31,14 @@ jobs:
       CONFIG_CCACHE: y
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Prepare Cache Key
         id: cache_key
         run: echo "timestamp=$(date +%s)" >> "$GITHUB_OUTPUT"
 
       - name: Setup Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ${{ env.CACHE_DIR }}
@@ -109,7 +109,7 @@ jobs:
           ./scripts/feeds install -a
           cd -
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version: 'stable'
       - name: Build Packages
@@ -136,11 +136,10 @@ jobs:
           done
           find "${{ github.workspace }}" -maxdepth 1 -type f \( -name "*.ipk" -o -name "*.apk" \) -exec ls -lh {} \;
       - name: Release and Upload Assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             *.ipk
-            *.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
